@@ -21,12 +21,12 @@ def get_listings(job_title: str, region: str = "Beglium"):
     return job_links
 
 def analyse_listings(job_links: array):
-    jobs = []
+    jobs = dict()
     
     for link in job_links:
         title = get_job_title(link)
-        #what_we_look_for_section = get_what_we_look_for_section(link)
-        jobs.append(title)
+        required_skills = get_required_skills(link)
+        jobs[title] = required_skills
     return jobs
 
     
@@ -40,17 +40,15 @@ def get_job_title(link: str):
         title = soup.find("h1").text
     except:
         return f"something went wrong for {link}"
-    try: 
-        index_seperator = title.find('-')
+    try:
+        return title.split('-')[0]
     except:
         return title
-    return title[0:index_seperator+1]
 
-def get_what_we_look_for_section(link: str):
+def get_required_skills(link: str):
     return "to be implemented"
 
 if __name__ == "__main__":
-    #get_job_title("https://be.linkedin.com/jobs/view/consumer-journey-data-analyst-at-philip-morris-international-3149104842?refId=AfPFGtPXU8J%2Fy%2FfwlYYPkA%3D%3D&trackingId=7hxxGdscM3Al1GJjwTVTRg%3D%3D&position=25&pageNum=0&trk=public_jobs_jserp-result_search-card")
     listings = get_listings("Data Analyst", "Belgium")
     findings = analyse_listings(listings)
     print(findings)
