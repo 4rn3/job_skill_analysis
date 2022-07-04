@@ -25,16 +25,18 @@ def get_listings(job_title: str, region: str = "Beglium"):
             job_links.append(a['href'])
     return job_links
 
-def analyse_listings(job_links: array):
+def analyse_listings(job_links: array, job_title: str):
     """
     Gets the job title and required skills from the listing
     """
     jobs = dict()
-    
+    job_title = job_title.split(' ')[1]
+
     for link in job_links:
         title = get_job_title(link)
-        required_skills = get_required_skills(link)
-        jobs[title] = required_skills
+        if job_title in title.lower():
+            required_skills = get_required_skills(link)
+            jobs[title] = required_skills
     return jobs
    
 def get_job_title(link: str):
@@ -70,52 +72,28 @@ def get_required_skills(link: str):
 
     return set(skills_required)
 
-def create_analytics(job_dict: dict):
-    skill_list = ['Master', 'Bachelor', 'Sql', 'Python', 'Sas', 'Aws', 'Gcp', 'Google', 'Amazon', 'Azure', 'Excel', 'Power', 'Tableau', 'Qlikview', 'Hadoop', 'Spark', 'Docker', 'Kubernetes', 'Oracle', 'Pandas', 'Dash', 'Scikit', 'TensorFlow', 'Keras', 'Git', 'Airflow', 'Java', 'Golang', 'Warehouse', 'Lake', 'Modeling', 'Linux', 'Cloudera', 'Hdfs', 'Yarn', 'Hive', 'Impala', 'Kafka', 'Ai', 'Ml', 'R']
-    data_analyst = {k:0 for k in skill_list}
-    data_scientist = {k:0 for k in skill_list}
-    data_engineer = {k:0 for k in skill_list}
-    machine_learning_engineer = {k:0 for k in skill_list}
-
-    data_analyst['title'] = "data_analyst"
-    data_scientist['title'] = "data_scientist"
-    data_engineer['title'] = "data_engineer"
-    machine_learning_engineer['title'] = "mle"
-
+def create_analytics(job_dict: dict, job_title: str):
+    skill_list = ['Title','Master', 'Bachelor', 'Sql', 'Python', 'Sas', 'Aws', 'Gcp', 'Google', 'Amazon', 'Azure', 'Excel', 'Power', 'Tableau', 'Qlikview', 'Hadoop', 'Spark', 'Docker', 'Kubernetes', 'Oracle', 'Pandas', 'Dash', 'Scikit', 'TensorFlow', 'Keras', 'Git', 'Airflow', 'Java', 'Golang', 'Warehouse', 'Lake', 'Modeling', 'Linux', 'Cloudera', 'Hdfs', 'Yarn', 'Hive', 'Impala', 'Kafka', 'Ai', 'Ml', 'R']
+    analytics = {k:0 for k in skill_list}
+    
     for job in job_dict.keys():
-        if "analyst" in job.lower() or "analist" in job.lower():
-            for skill in job_dict[job]:
-                try:
-                    data_analyst[skill.title()] += 1
-                except:
-                    pass
-        if "scientist" in job.lower() or "science" in job.lower() :
-            for skill in job_dict[job]:
-                try:
-                    data_scientist[skill.title()] += 1
-                except:
-                    pass
-        if "engineer" in job.lower() and "data" in job.lower() :
-            for skill in job_dict[job]:
-                try:
-                    data_engineer[skill.title()] += 1
-                except:
-                    pass
-        if "machine" in job.lower():
-            for skill in job_dict[job]:
-                try:
-                    machine_learning_engineer[skill.title()] += 1
-                except:
-                    pass
+        for skill in job_dict[job]:
+            try:
+                analytics[skill.title()] += 1
+            except:
+                pass
 
-    return data_analyst, data_scientist, data_engineer, machine_learning_engineer
+    analytics['Title'] = job_title
+    return analytics
 
 if __name__ == "__main__":
-    listings = get_listings("Data analyst", "Belgium")
-    findings = analyse_listings(listings)
-    data_analyst, data_scientist, data_engineer, machine_learning_engineer = create_analytics(findings)
-    job_dict = {data_analyst, data_scientist, data_engineer, machine_learning_engineer}
-    print(job_dict)
+    job_title = "Data analyst"
+    region = "Belgium"
+    listings = get_listings(job_title, region)
+    findings = analyse_listings(listings, job_title )
+    analytics = create_analytics(findings, job_title)
+    print(analytics)
+    
 
 
 
