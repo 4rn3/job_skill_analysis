@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
 SKILLS = 'Master|Bachelor|SQL|Python|SAS|Pyspark|AWS|GCP|Google|Amazon|Azure|Excel|Power|Tableau|QlikView|Hadoop|Spark|docker|kubernetes|Oracle|Pandas|Dash|Scikit|TensorFlow|Keras|git|Airflow|Java|Golang|warehouse|lake|Modeling|Linux|Cloudera|HDFS|YARN|Hive|Impala|Kafka|AI|ML|R'
+
 def get_soup(url: str):
     r = req.get(url, headers=HEADERS)
     return BeautifulSoup(r.content, 'html5lib')
@@ -73,10 +74,10 @@ def get_required_skills(link: str):
     return set(skills_required)
 
 def skills_to_list(skills):
-    return [skills.replace('|',',')[1:]]
+    return skills.replace('|',',').split(',')
 
 def create_analytics(job_dict: dict, job_title: str):
-    skill_list = ['Title','Master', 'Bachelor', 'Sql', 'Python', 'Sas', 'Aws', 'Gcp', 'Google', 'Amazon', 'Azure', 'Excel', 'Power', 'Tableau', 'Qlikview', 'Hadoop', 'Spark', 'Docker', 'Kubernetes', 'Oracle', 'Pandas', 'Dash', 'Scikit', 'TensorFlow', 'Keras', 'Git', 'Airflow', 'Java', 'Golang', 'Warehouse', 'Lake', 'Modeling', 'Linux', 'Cloudera', 'Hdfs', 'Yarn', 'Hive', 'Impala', 'Kafka', 'Ai', 'Ml', 'R']
+    skill_list = skills_to_list(SKILLS)
     analytics = {k:0 for k in skill_list}
     
     for job in job_dict.keys():
@@ -89,13 +90,22 @@ def create_analytics(job_dict: dict, job_title: str):
     analytics['Title'] = job_title
     return analytics
 
+def to_pdf(data):
+    return pd.DataFrame.from_dict(data)
+
 if __name__ == "__main__":
-    job_title = "Data analyst"
+    jobs = ["Data analyst", "Data scientist", "Data engineer"]
     region = "Belgium"
-    listings = get_listings(job_title, region)
-    findings = analyse_listings(listings, job_title )
-    analytics = create_analytics(findings, job_title)
-    print(analytics)
+    analytics = []
+    for job_title in jobs:
+        listings = get_listings(job_title, region)
+        findings = analyse_listings(listings, job_title )
+        job_stats = create_analytics(findings, job_title)
+        analytics.append(job_stats)
+    
+    df = to_pdf(analytics)
+    df.to_csv("required_skills.csv")
+
     
 
 
