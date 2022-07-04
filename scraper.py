@@ -6,7 +6,7 @@ from pandas import array
 from bs4 import BeautifulSoup
 
 HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
-
+SKILLS = 'Master|Bachelor|SQL|Python|SAS|Pyspark|AWS|GCP|Google|Amazon|Azure|Excel|Power|Tableau|QlikView|Hadoop|Spark|docker|kubernetes|Oracle|Pandas|Dash|Scikit|TensorFlow|Keras|git|Airflow|Java|Golang|warehouse|lake|Modeling|Linux|Cloudera|HDFS|YARN|Hive|Impala|Kafka|AI|ML|R'
 def get_soup(url: str):
     r = req.get(url, headers=HEADERS)
     return BeautifulSoup(r.content, 'html5lib')
@@ -64,13 +64,16 @@ def get_required_skills(link: str):
         return "something went wrong for {link}"
 
     cleaned_div = re.sub(r'[\W_]+', ' ', div)
-    skills = '|Master|Bachelor|SQL|Python|SAS|Pyspark|AWS|GCP|Google|Amazon|Azure|Excel|Power|Tableau|QlikView|Hadoop|Spark|docker|kubernetes|Oracle|Pandas|Dash|Scikit|TensorFlow|Keras|git|Airflow|Java|Golang|warehouse|lake|Modeling|Linux|Cloudera|HDFS|YARN|Hive|Impala|Kafka'
+    skills = SKILLS[:-7]
     skills_required = re.findall( skills, cleaned_div, flags=re.IGNORECASE)
 
-    upper_case_skills = "AI|ML|R"
+    upper_case_skills = SKILLS[-7:]
     skills_required += re.findall( upper_case_skills, cleaned_div)
 
     return set(skills_required)
+
+def skills_to_list(skills):
+    return [skills.replace('|',',')[1:]]
 
 def create_analytics(job_dict: dict, job_title: str):
     skill_list = ['Title','Master', 'Bachelor', 'Sql', 'Python', 'Sas', 'Aws', 'Gcp', 'Google', 'Amazon', 'Azure', 'Excel', 'Power', 'Tableau', 'Qlikview', 'Hadoop', 'Spark', 'Docker', 'Kubernetes', 'Oracle', 'Pandas', 'Dash', 'Scikit', 'TensorFlow', 'Keras', 'Git', 'Airflow', 'Java', 'Golang', 'Warehouse', 'Lake', 'Modeling', 'Linux', 'Cloudera', 'Hdfs', 'Yarn', 'Hive', 'Impala', 'Kafka', 'Ai', 'Ml', 'R']
