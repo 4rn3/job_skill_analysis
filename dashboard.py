@@ -18,6 +18,7 @@ app.layout = html.Div([
     ]),
 
     html.Div([
+    html.Label("Degrees"),
       dcc.Dropdown(
         id="degree_dropdown",
         options= [
@@ -25,17 +26,60 @@ app.layout = html.Div([
             {"label":"Bachelor","value":"Bachelor"},
             {"label":"All degrees","value":"both"}
         ],
-        value="Bachelor",
+        value="both",
         clearable=False
-      ),  
-    ]),
-
-    html.Div([
-        dcc.Graph(
+      ),
+      dcc.Graph(
             id="degree_graph",
         ),
     ]),
+
+    html.Div([
+        html.Label("Programming languages"),
+        dcc.Checklist(
+            id="programming_checklist",
+            options= ["SQL","Python","R","Java"],
+            value=["SQL","Python","R","Java"],
+            inline=True
+        ),
+        dcc.Graph(
+            id="programming_graph"
+        ),
+    ]),
+
+    html.Div([
+        html.Label("Visualisation techniques"),
+        dcc.Checklist(
+            id="visualisation_checklist",
+            options= ["Power Bi","Tableau","Dash"],
+            value=["Power Bi","Tableau","Dash"],
+            inline=True
+        ),
+        dcc.Graph(
+            id="visualisation_graph"
+        ),
+    ]),
 ])
+
+@app.callback(
+    Output(component_id="visualisation_graph",component_property="figure"),
+    [Input(component_id="visualisation_checklist",component_property="value")]
+)
+def visualisation_checklist(checklist_values):
+
+    if "Power Bi" in checklist_values:
+        checklist_values = checklist_values.replace("Power Bi", "Power")
+
+    dff = df
+    return px.bar(dff, x="Title", y=checklist_values, barmode="group")
+
+@app.callback(
+    Output(component_id="programming_graph",component_property="figure"),
+    [Input(component_id="programming_checklist",component_property="value")]
+)
+def programming_checklist(checklist_values):
+    dff = df
+    return px.bar(dff, x="Title", y=checklist_values, barmode="group")
 
 @app.callback(
     Output(component_id='degree_graph', component_property='figure'),
