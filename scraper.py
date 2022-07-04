@@ -1,4 +1,5 @@
 import re 
+import pandas as pd
 import requests as req
 
 from pandas import array
@@ -35,8 +36,7 @@ def analyse_listings(job_links: array):
         required_skills = get_required_skills(link)
         jobs[title] = required_skills
     return jobs
-
-    
+   
 def get_job_title(link: str):
     """
     Extracts the job title from the post
@@ -45,7 +45,7 @@ def get_job_title(link: str):
     try:
         title = soup.find("h1").text
     except:
-        return f"something went wrong for {link}"
+        return f"error"
     try:
         return title.split('-')[0]
     except:
@@ -59,10 +59,10 @@ def get_required_skills(link: str):
     try:
         div = soup.find("div", attrs={"class":"show-more-less-html__markup"}).text
     except:
-        return "something went wrong"
+        return "something went wrong for {link}"
 
     cleaned_div = re.sub(r'[\W_]+', ' ', div)
-    skills = 'Python|SAS|Master|Bachelor|SQL|Pyspark|AWS|GCP|Google|Amazon|Azure|excel|bachelordiploma|masterdiploma|Power|Tableau|QlikView|Hadoop|Spark|docker|kubernetes|Oracle|Pandas|Dash|Scikit|TensorFlow|Keras|git|Airflow|Java|Golang|warehouse|lake|Modeling|Linux|Cloudera|HDFS|YARN|Hive|Impala|Kafka'
+    skills = '|Master|Bachelor|bachelordiploma|masterdiploma|SQL|Python|SAS|Pyspark|AWS|GCP|Google|Amazon|Azure|Excel|Power|Tableau|QlikView|Hadoop|Spark|docker|kubernetes|Oracle|Pandas|Dash|Scikit|TensorFlow|Keras|git|Airflow|Java|Golang|warehouse|lake|Modeling|Linux|Cloudera|HDFS|YARN|Hive|Impala|Kafka'
     skills_required = re.findall( skills, cleaned_div, flags=re.IGNORECASE)
 
     upper_case_skills = "AI|ML|R"
@@ -70,8 +70,27 @@ def get_required_skills(link: str):
 
     return set(skills_required)
 
+def create_analytics(job_dict: dict):
+    skill_list = ['Master', 'Bachelor', 'SQL', 'Python', 'SAS', 'AWS', 'GCP', 'Google', 'Amazon', 'Azure', 'Excel', 'Power', 'Tableau', 'QlikView', 'Hadoop', 'Spark', 'docker', 'kubernetes', 'Oracle', 'Pandas', 'Dash', 'Scikit', 'TensorFlow', 'Keras', 'git', 'Airflow', 'Java', 'Golang', 'data_warehouse', 'data_lake', 'data_Modeling', 'Linux', 'Cloudera', 'HDFS', 'YARN', 'Hive', 'Impala', 'Kafka']
+    data_analyst = {k:0 for k in skill_list}
+    data_scientist = {k:0 for k in skill_list}
+    data_engineer = {k:0 for k in skill_list}
+
+    for job in job_dict.keys():
+        if "analyst" in job.lower() or "analist" in job.lower():
+            for skill in job_dict[job]:
+                data_analyst[skill] += 1
+        if "science" in job.lower() :
+            pass
+    print(data_analyst)
+
+
 if __name__ == "__main__":
-    listings = get_listings("Data Analyst", "Belgium")
-    findings = analyse_listings(listings)
-    print(findings)
-    #get_required_skills("https://www.linkedin.com/jobs/view/3135261264/?alternateChannel=search&refId=rtc9U6cwCnbOMuETB5rGEg%3D%3D&trackingId=ZCfCpFhq1%2BAfg2vfDvOk6w%3D%3D")
+    #listings = get_listings("Data Analyst", "Belgium")
+    #findings = analyse_listings(listings)
+    #print(findings)
+    job_dict = {'Data Analyst': {'master', 'Excel', 'dash', 'R', 'excel', 'Power'}, 'Data Analyst ': {'dash', 'R'}, 'Business Data Analyst Junior': {'SQL', 'dash', 'power'}, 'Junior Data Analyst (Growth)': {'SQL', 'Python', 'power', 'Tableau', 'Google', 'git', 'R', 'excel'}, 'Junior Data Analyst': {'SQL', 'master', 'Excel', 'Bachelor', 'excel', 'Power'}, 'Google Data Analyst': {'SQL', 'Python', 'dash', 'Bachelor', 'Tableau', 'Google', 'git', 'R', 'Warehouse'}, 'DATA & INSIGHTS ANALYST ': 'something went wrong', 'something went wrong for https://be.linkedin.com/jobs/view/data-analyst-at-nexeo-3103947600?refId=JkStqlwbWRmNaMBj6tGeCQ%3D%3D&trackingId=blcOK01Eg6xyJkv64pG9jg%3D%3D&position=12&pageNum=0&trk=public_jobs_jserp-result_search-card': 'something went wrong', 'something went wrong for https://be.linkedin.com/jobs/view/data-analyst-at-colruyt-group-3129239618?refId=JkStqlwbWRmNaMBj6tGeCQ%3D%3D&trackingId=CIBk%2F1KxEUK%2FxeelklKsjQ%3D%3D&position=13&pageNum=0&trk=public_jobs_jserp-result_search-card': {'SQL', 'Python', 'master', 'dash', 'R'}, 'Business Data Analyst': {'Bachelor', 'R', 'Master'}, 'Junior Clinical Data Analyst': {'power', 'Excel', 'R', 'excel', 'SAS'}, 'Data Analyst/Analytical Engineer': {'sas', 'SQL', 'modeling', 'Azure', 'Master', 'git', 'R', 'lake', 'Power'}, 'something went wrong for https://be.linkedin.com/jobs/view/data-analyst-at-gentis-recruitment-3136683329?refId=JkStqlwbWRmNaMBj6tGeCQ%3D%3D&trackingId=foPtTl6KG6dbu%2F5U%2Bi8NOg%3D%3D&position=19&pageNum=0&trk=public_jobs_jserp-result_search-card': 'something went wrong', 'something went wrong for https://be.linkedin.com/jobs/view/data-analyst-at-select-hr-3079977987?refId=JkStqlwbWRmNaMBj6tGeCQ%3D%3D&trackingId=qm5VEJ1O8727TTB3TT8tRg%3D%3D&position=20&pageNum=0&trk=public_jobs_jserp-result_search-card': 'something went wrong', 'Data analyst': {'R', 'Master'}, 'Consumer Journey Data Analyst': {'Excel', 'dash', 'Bachelor', 'git', 'R', 'Power'}, 'Data Analist': {'SQL', 'master', 'Excel', 'Bachelor', 'Tableau', 'git', 'SAS', 'Power', 'warehouse'}}
+    create_analytics(job_dict)
+
+
+    
