@@ -8,7 +8,7 @@ from dash import dcc, html
 from dash.dependencies import Output, Input
 
 df = pd.read_csv('./required_skills.csv') 
-
+df.rename(columns={"Title":"Job title", "Power":"Power Bi"}, inplace = True)
 
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -112,7 +112,7 @@ def cloud_checklist(checklist_values):
     dff["Google"] = dff["Google"] + dff["GCP"]
     dff["Amazon"] = dff["Amazon"] + dff["AWS"]
 
-    return px.bar(dff, x="Title", y=checklist_values, barmode="group")
+    return px.bar(dff, x="Job title", y=checklist_values, barmode="group")
 
 @app.callback(
     Output(component_id="visualisation_graph",component_property="figure"),
@@ -120,11 +120,8 @@ def cloud_checklist(checklist_values):
 )
 def visualisation_checklist(checklist_values):
 
-    if "Power Bi" in checklist_values:
-        checklist_values = [item.replace("Power Bi", "Power") for item in checklist_values]
-
     dff = df
-    return px.bar(dff, x="Title", y=checklist_values, barmode="group")
+    return px.bar(dff, x="Job title", y=checklist_values, barmode="group")
 
 @app.callback(
     Output(component_id="programming_graph",component_property="figure"),
@@ -132,7 +129,7 @@ def visualisation_checklist(checklist_values):
 )
 def programming_checklist(checklist_values):
     dff = df
-    return px.bar(dff, x="Title", y=checklist_values, barmode="group")
+    return px.bar(dff, x="Job title", y=checklist_values, barmode="group")
 
 @app.callback(
     Output(component_id='degree_graph', component_property='figure'),
@@ -142,9 +139,9 @@ def make_degree_graph(degree_dropdown_value):
     dff = df
 
     if degree_dropdown_value == "both":
-        return px.bar(dff, x="Title", y=["Bachelor","Master"], barmode="group")
+        return px.bar(dff, x="Job title", y=["Bachelor","Master"], barmode="group")
 
-    fig = px.bar(dff, x="Title", y=degree_dropdown_value)
+    fig = px.bar(dff, x="Job title", y=degree_dropdown_value)
 
     return fig
 

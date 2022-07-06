@@ -48,7 +48,7 @@ def get_job_title(link: str):
     try:
         title = soup.find("h1").text
     except:
-        return f"error"
+        return f"couldn't get job title"
     try:
         return title.split('-')[0]
     except:
@@ -62,7 +62,7 @@ def get_required_skills(link: str):
     try:
         div = soup.find("div", attrs={"class":"show-more-less-html__markup"}).text
     except:
-        return "something went wrong for {link}"
+        return f"something went wrong for {link}"
 
     cleaned_div = re.sub(r'[\W_]+', ' ', div)
     skills = SKILLS[:-7]
@@ -105,6 +105,7 @@ if __name__ == "__main__":
     
     df = to_pdf(analytics)
     df.to_csv("required_skills.csv")
+
 
     
 
