@@ -7,4 +7,4 @@ I was curious what the most required skills where for data analysts/ data scient
 So I made a webscraper to scrape the linkedIn job page with the requests and bs4 python modules.
 The findings where then displayed in a dash by plotly dashboard.
 
-This project was mainly to get an overview of the skills required in data job and to practice dash.
+This project was mainly to get an overview of the skills required in data jobs and to practice dash.
