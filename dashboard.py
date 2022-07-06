@@ -2,92 +2,104 @@ import dash
 
 import pandas as pd
 import plotly.express as px
+import dash_bootstrap_components as dbc
 
 from dash import dcc, html
-from dash.dependencies import Output, Input, State
+from dash.dependencies import Output, Input
 
 df = pd.read_csv('./required_skills.csv') 
 
-external_stylesheets = [
-    'https://codepen.io/chriddyp/pen/bWLwgP.css',
-    {
-        'href': 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
-        'rel': 'stylesheet',
-        'integrity': 'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO',
-        'crossorigin': 'anonymous'
-    }
-]
 
-app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = html.Div([
-
-    html.Div([
-        html.H1("Job skill analyzer")
-    ], className="banner"),
-
-    html.Div([
-
-        html.Div([
+            html.Div([
+                html.H1("Job skill analyzer", style={'textAlign':"center"})
+            ]),
         
-        html.Div([
-        html.Label("Degrees"),
-        dcc.Dropdown(
-            id="degree_dropdown",
-            options= [
-                {"label":"Master","value":"Master"},
-                {"label":"Bachelor","value":"Bachelor"},
-                {"label":"All degrees","value":"both"}
-            ],
-            value="both",
-            clearable=False
-        )
-        ], className="drop"),
-        dcc.Graph(
-                id="degree_graph",
-            ),
-        ], className="six columns"),
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    html.Div([
+                            dbc.Col([
+                                html.Label(html.B("Degrees")),
+                                dcc.Dropdown(
+                                    id="degree_dropdown",
+                                    options= [
+                                        {"label":"Master","value":"Master"},
+                                        {"label":"Bachelor","value":"Bachelor"},
+                                        {"label":"All degrees","value":"both"}
+                                    ],
+                                    value="both",
+                                    clearable=False,
+                                ),
+                            ], width={"size":6, "offset":3}),
+                        
+                    ]),
+                        dcc.Graph(
+                                id="degree_graph",
+                            ),
+           
+                ]),
+            ], width=6),
+        
+            dbc.Col([
+                html.Div([
+                        dbc.Col([
+                            html.Label(html.B("Programming languages")),
+                            dcc.Checklist(
+                                id="programming_checklist",
+                                options= ["SQL","Python","R","Java"],
+                                value=["SQL","Python","R","Java"],
+                                inline=True
+                            ),
+                        ], width={"size":6, "offset":4}),
+                            dcc.Graph(
+                                id="programming_graph"
+                            ),
+        
+            
+                ]),
+            ], width=6),
+        ]),
 
-        html.Div([
-            html.Label("Programming languages"),
-            dcc.Checklist(
-                id="programming_checklist",
-                options= ["SQL","Python","R","Java"],
-                value=["SQL","Python","R","Java"],
-                inline=True
-            ),
-            dcc.Graph(
-                id="programming_graph"
-            ),
-        ], className="six columns"),
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    dbc.Col([
+                        html.Label(html.B("Visualisation techniques")),
+                        dcc.Checklist(
+                            id="visualisation_checklist",
+                            options= ["Power Bi","Tableau","Dash"],
+                            value=["Power Bi","Tableau","Dash"],
+                            inline=True
+                        ),
+                    ], width={"size":6, "offset":4}),
+                    
+                    dcc.Graph(
+                        id="visualisation_graph"
+                    ),
+                ]),
+            ], width=6),
 
-        html.Div([
-            html.Label("Visualisation techniques"),
-            dcc.Checklist(
-                id="visualisation_checklist",
-                options= ["Power Bi","Tableau","Dash"],
-                value=["Power Bi","Tableau","Dash"],
-                inline=True
-            ),
-            dcc.Graph(
-                id="visualisation_graph"
-            ),
-        ], className="five columns"),
-
-         html.Div([
-            html.Label("Cloud"),
-            dcc.Checklist(
-                id="cloud_checklist",
-                options= ["Amazon","Google","Azure"],
-                value=["Amazon","Google","Azure"],
-                inline=True
-            ),
-            dcc.Graph(
-                id="cloud_graph"
-            ),
-        ], className="five columns"),
-
-    ], className="container"),
+            dbc.Col([
+                html.Div([
+                    dbc.Col([
+                        html.Label(html.B("Cloud")),
+                        dcc.Checklist(
+                            id="cloud_checklist",
+                            options= ["Amazon","Google","Azure"],
+                            value=["Amazon","Google","Azure"],
+                            inline=True
+                        ),
+                    ], width={"size":6, "offset":4}),
+                    
+                    dcc.Graph(
+                        id="cloud_graph"
+                    ),
+                ]),
+            ], width=6),
+        ])
 ])
 
 @app.callback(
