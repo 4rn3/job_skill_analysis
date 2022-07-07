@@ -12,7 +12,7 @@ def get_soup(url: str):
     r = req.get(url, headers=HEADERS)
     return BeautifulSoup(r.content, 'html5lib')
 
-def get_listings(job_title: str, region: str = "Beglium"):
+def get_listings(job_title: str, region: str = "Belgium"):
     """
     Gets the link to all job posts for the given job title & region
     """
