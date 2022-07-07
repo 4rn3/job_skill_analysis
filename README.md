@@ -8,3 +8,4 @@ So I made a webscraper to scrape the linkedIn job page with the requests and bs4
 The findings where then displayed in a dash by plotly dashboard.
 
 This project was mainly to get an overview of the skills required in data jobs and to practice dash.
+![dashboard preview](./assets/preview.png "dashboard preview")
