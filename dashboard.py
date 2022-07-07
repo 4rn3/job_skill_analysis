@@ -6,11 +6,12 @@ import dash_bootstrap_components as dbc
 
 from dash import dcc, html
 from dash.dependencies import Output, Input
+from pyrsistent import s
 
 df = pd.read_csv('./required_skills.csv') 
 df.rename(columns={"Title":"Job title", "Power":"Power Bi"}, inplace = True)
 
-app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.LUX])
 
 app.layout = html.Div([
             html.Div([
@@ -141,10 +142,8 @@ def make_degree_graph(degree_dropdown_value):
     if degree_dropdown_value == "both":
         return px.bar(dff, x="Job title", y=["Bachelor","Master"], barmode="group")
 
-    fig = px.bar(dff, x="Job title", y=degree_dropdown_value)
-
-    return fig
-
+    return px.bar(dff, x="Job title", y=degree_dropdown_value)
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+    
